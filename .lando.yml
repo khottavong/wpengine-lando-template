@@ -1,0 +1,70 @@
+name: yoursite
+recipe: wordpress
+config:
+  php: '8.2'
+proxy:
+  appserver:
+    - yoursite.lndo.site
+    - subdomain.yoursite.lndo.site
+tooling:
+  wp:
+    service: appserver
+    cmd: wp
+  download:db:
+    service: appserver
+    level: app
+    cmd: /app/connect.sh --mode=plDB
+    options:
+      env:
+        passthrough: true
+        alias: [e]
+        describe: Environment (DEV|STG|PRD)
+        interactive:
+          type: list
+          choices: [DEV, STG, PRD]
+          message: Pull DB from which WPE env?
+          default: PRD
+          weight: 600
+  download:media:
+    service: appserver
+    level: app
+    cmd: /app/connect.sh --mode=plFS
+    options:
+      env:
+        passthrough: true
+        alias: [e]
+        describe: Environment (DEV|STG|PRD)
+        interactive:
+          type: list
+          choices: [DEV, STG, PRD]
+          message: Pull files from which WPE env?
+          default: PRD
+          weight: 600
+  db-import:
+    service: appserver
+    description: Import a local SQL file
+    cmd: wp db import
+    options:
+      file:
+        passthrough: true
+        describe: SQL file to import
+  logs:
+    service: appserver
+    description: Tail application logs
+    cmd: tail -f /var/log/apache2/error.log
+  mysql:
+    service: database
+    description: Connect to MySQL database
+    cmd: mysql -u wordpress -pwordpress wordpress
+  info:
+    service: appserver
+    description: Show connection information
+    cmd: env | grep -E "(DB_|LANDO_|WORDPRESS_)" | sort
+  ssh-copy-id:
+    service: appserver
+    description: Copy SSH keys to container for WP Engine access
+    cmd: bash -c "mkdir -p ~/.ssh && cp /user/.ssh/id_* ~/.ssh/ 2>/dev/null || echo 'Copy your SSH keys to ~/.ssh/ on your host machine'"
+  reset:
+    service: appserver
+    description: Reset WordPress installation (keeps code, removes DB)
+    cmd: wp db reset --yes
