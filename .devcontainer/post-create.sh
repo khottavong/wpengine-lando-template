@@ -3,6 +3,10 @@ set -e
 
 echo "🚀 Setting up WP Engine development environment..."
 
+# Set proper ownership and permissions
+chown -R www-data:www-data /var/www/html
+chmod -R 755 /var/www/html
+
 # Make connect.sh executable
 chmod +x /var/www/html/connect.sh
 

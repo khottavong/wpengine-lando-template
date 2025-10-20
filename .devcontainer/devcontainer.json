@@ -41,9 +41,9 @@
     }
   },
 
-  "remoteUser": "www-data",
-  "postCreateCommand": ".devcontainer/post-create.sh",
-  "forwardPorts": [80, 443, 3306],
+  "remoteUser": "root",
+  "postCreateCommand": "bash /workspaces/${localWorkspaceFolderBasename}/.devcontainer/post-create.sh",
+  "forwardPorts": [80, 443, 3306, 8080],
   "portsAttributes": {
     "80": {
       "label": "WordPress HTTP",
@@ -56,6 +56,10 @@
     "3306": {
       "label": "MySQL Database",
       "onAutoForward": "silent"
+    },
+    "8080": {
+      "label": "PhpMyAdmin",
+      "onAutoForward": "notify"
     }
   }
 }

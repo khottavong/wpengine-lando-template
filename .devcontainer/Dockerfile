@@ -49,5 +49,8 @@ COPY apache-config.conf /etc/apache2/sites-available/000-default.conf
 # Set working directory
 WORKDIR /var/www/html
 
-# Switch to www-data user
-USER www-data
+# Keep as root for Codespaces compatibility
+USER root
+
+# Set up www-data permissions but stay as root
+RUN usermod -a -G sudo www-data
