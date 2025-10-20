@@ -44,7 +44,7 @@ RUN a2enmod rewrite \
     && a2enmod headers
 
 # Copy custom Apache configuration
-COPY apache-config.conf /etc/apache2/sites-available/000-default.conf
+COPY .devcontainer/apache-config.conf /etc/apache2/sites-available/000-default.conf
 
 # Set working directory
 WORKDIR /var/www/html
