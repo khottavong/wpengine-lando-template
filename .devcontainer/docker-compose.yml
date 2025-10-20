@@ -1,0 +1,69 @@
+version: '3.8'
+
+services:
+  wordpress:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      WORDPRESS_DB_HOST: mysql:3306
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: wordpress
+      WORDPRESS_DB_NAME: wordpress
+      WORDPRESS_CONFIG_EXTRA: |
+        define('WP_DEBUG', true);
+        define('WP_DEBUG_LOG', true);
+        define('WP_DEBUG_DISPLAY', false);
+        define('SCRIPT_DEBUG', true);
+        define('MULTISITE', true);
+        define('SUBDOMAIN_INSTALL', true);
+        define('DOMAIN_CURRENT_SITE', getenv('CODESPACE_NAME') . '-80.app.github.dev');
+        define('PATH_CURRENT_SITE', '/');
+        define('SITE_ID_CURRENT_SITE', 1);
+        define('BLOG_ID_CURRENT_SITE', 1);
+    volumes:
+      - ..:/var/www/html
+      - wordpress_data:/var/www/html/wp-content/uploads
+    depends_on:
+      - mysql
+    networks:
+      - wpengine-network
+
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: wordpress
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - wpengine-network
+    command: --default-authentication-plugin=mysql_native_password
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    ports:
+      - "8080:80"
+    environment:
+      PMA_HOST: mysql
+      PMA_USER: wordpress
+      PMA_PASSWORD: wordpress
+    depends_on:
+      - mysql
+    networks:
+      - wpengine-network
+
+volumes:
+  wordpress_data:
+  mysql_data:
+
+networks:
+  wpengine-network:
+    driver: bridge

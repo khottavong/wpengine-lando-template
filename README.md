@@ -1,30 +1,42 @@
-# WP Engine Lando Template
+# WP Engine Development Template
 
-A reusable Lando configuration for WP Engine WordPress sites with Pantheon-style interactive commands.
+A reusable development environment for WP Engine WordPress sites with Pantheon-style interactive commands.
+
+**🚀 Works with:** Lando (local) + GitHub Codespaces (cloud)
 
 ## 🚀 Quick Start
 
-1. **Clone this template:**
-   ```bash
-   git clone <this-repo> your-project-name
-   cd your-project-name
-   ```
-
+### Option 1: GitHub Codespaces (Cloud) ☁️
+1. **Click "Use this template" → "Open in a codespace"**
 2. **Configure your site:**
    ```bash
    cp .env.example .env
    # Edit .env with your WP Engine environment names and domains
    ```
+3. **Sync data:**
+   ```bash
+   wp-db       # Interactive prompt for environment
+   wp-media    # Interactive prompt for environment
+   ```
 
+### Option 2: Lando (Local) 💻
+1. **Clone this template:**
+   ```bash
+   git clone <this-repo> your-project-name
+   cd your-project-name
+   ```
+2. **Configure your site:**
+   ```bash
+   cp .env.example .env
+   # Edit .env with your WP Engine environment names and domains
+   ```
 3. **Update `.lando.yml`:**
    - Change `name:` to your project name
    - Update `proxy` domains to match your local development URLs
-
 4. **Start Lando:**
    ```bash
    lando start
    ```
-
 5. **Download WordPress and sync data:**
    ```bash
    lando wp core download
@@ -34,9 +46,14 @@ A reusable Lando configuration for WP Engine WordPress sites with Pantheon-style
 
 ## 📋 Prerequisites
 
+### For Local Development (Lando)
 - [Lando](https://lando.dev/) installed
 - SSH keys configured for WP Engine access
 - WP Engine environments set up
+
+### For Cloud Development (Codespaces)  
+- GitHub account with Codespaces access
+- SSH keys configured for WP Engine access (can be done in Codespace)
 
 ## 🔧 Configuration
 
@@ -82,20 +99,22 @@ SECONDARY_BLOG_ID=2
 
 ## 🛠️ Available Commands
 
-### Interactive Environment Selection (Pantheon-style)
+### Lando (Local Development)
+
+#### Interactive Environment Selection (Pantheon-style)
 ```bash
 lando download:db     # Interactive prompt: DEV, STG, PRD
 lando download:media  # Interactive prompt: DEV, STG, PRD  
 ```
 
-### Direct Environment Specification
+#### Direct Environment Specification
 ```bash
 lando download:db -e PRD     # Pull from production
 lando download:db -e STG     # Pull from staging
 lando download:db -e DEV     # Pull from development
 ```
 
-### WordPress Management
+#### WordPress Management
 ```bash
 lando wp <command>           # Any WP-CLI command
 lando wp site list           # List multisite sites
@@ -103,12 +122,43 @@ lando wp user list           # List users
 lando wp cache flush         # Flush cache
 ```
 
-### Development Tools
+#### Development Tools
 ```bash
 lando logs                   # View container logs
 lando ssh                    # SSH into appserver
 lando mysql                  # Access database
 lando info                   # View connection info
+```
+
+### Codespaces (Cloud Development)
+
+#### Interactive Environment Selection
+```bash
+wp-db                        # Interactive prompt: DEV, STG, PRD
+wp-media                     # Interactive prompt: DEV, STG, PRD
+```
+
+#### Direct Environment Specification  
+```bash
+wp-download-db               # Direct database download
+wp-download-media            # Direct media download
+E=PRD wp-download-db         # Pull from specific environment
+```
+
+#### WordPress Management
+```bash
+wp <command> --allow-root    # Any WP-CLI command
+wp site list --allow-root    # List multisite sites
+wp user list --allow-root    # List users
+wp cache flush --allow-root  # Flush cache
+```
+
+#### Development Tools
+```bash
+wp-logs                      # View WordPress logs
+wp-mysql                     # Access database
+wp-info                      # View environment info
+wp-reset                     # Reset WordPress database
 ```
 
 ## 🏗️ Project Structure

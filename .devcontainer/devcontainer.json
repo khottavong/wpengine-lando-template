@@ -1,0 +1,61 @@
+{
+  "name": "WP Engine WordPress Development",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "wordpress",
+  "workspaceFolder": "/var/www/html",
+  "shutdownAction": "stopCompose",
+  
+  "features": {
+    "ghcr.io/devcontainers/features/common-utils:2": {
+      "installZsh": true,
+      "configureZshAsDefaultShell": true,
+      "installOhMyZsh": true
+    },
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {
+      "moby": true,
+      "dockerDashComposeVersion": "v2"
+    },
+    "ghcr.io/devcontainers/features/node:1": {
+      "nodeGypDependencies": true,
+      "version": "lts"
+    }
+  },
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-vscode.vscode-json",
+        "bradlc.vscode-tailwindcss",
+        "formulahendry.auto-rename-tag",
+        "ms-vscode.live-server",
+        "ms-toolsai.jupyter",
+        "ms-python.python",
+        "ms-vscode.powershell",
+        "ms-vscode.test-adapter-converter",
+        "ms-vscode.vscode-typescript-next"
+      ],
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "zsh",
+        "php.suggest.basic": false
+      }
+    }
+  },
+
+  "remoteUser": "www-data",
+  "postCreateCommand": ".devcontainer/post-create.sh",
+  "forwardPorts": [80, 443, 3306],
+  "portsAttributes": {
+    "80": {
+      "label": "WordPress HTTP",
+      "onAutoForward": "notify"
+    },
+    "443": {
+      "label": "WordPress HTTPS", 
+      "onAutoForward": "notify"
+    },
+    "3306": {
+      "label": "MySQL Database",
+      "onAutoForward": "silent"
+    }
+  }
+}
