@@ -8,7 +8,7 @@ RUN apt-get update && apt-get install -y \
     unzip \
     rsync \
     openssh-client \
-    mysql-client \
+    mariadb-client \
     less \
     nano \
     vim \
